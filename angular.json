@@ -62,11 +62,11 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "options": {
-            "buildTarget": "angular2-jwt:build"
+            "buildTarget": "angular-jwt-demo:build"
           },
           "configurations": {
             "production": {
-              "buildTarget": "angular2-jwt:build:production"
+              "buildTarget": "angular-jwt-demo:build:production"
             }
           }
         },
