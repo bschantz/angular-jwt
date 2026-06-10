@@ -38,20 +38,17 @@ module.exports = [
       "@typescript-eslint/explicit-member-accessibility": [
         "error",
         {
-          accessibility: "explicit",
-          overrides: {
-            constructors: "no-public",
-          },
+          accessibility: "no-public",
         },
       ],
-      "@typescript-eslint/explicit-function-return-type": [
-        "error",
-        {
-          allowExpressions: true,
-          allowTypedFunctionExpressions: false,
-          allowHigherOrderFunctions: false,
-        },
-      ],
+      // "@typescript-eslint/explicit-function-return-type": [
+      //   "error",
+      //   {
+      //     allowExpressions: true,
+      //     allowTypedFunctionExpressions: false,
+      //     allowHigherOrderFunctions: false,
+      //   },
+      // ],
       "@angular-eslint/directive-selector": [
         "warn",
         {

@@ -1,6 +1,6 @@
 import { DOCUMENT } from "@angular/common";
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
-import { Inject, inject, Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { JwtHelperService } from "./jwthelper.service";
 import { JWT_OPTIONS } from "./jwtoptions.token";
 
@@ -15,31 +15,31 @@ const fromPromiseOrValue = <T>(input: T | Promise<T>) => {
 };
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-  tokenGetter: (request?: HttpRequest<any>) => string | null | Promise<string | null>;
+  tokenGetter: (request?: HttpRequest<unknown>) => string | null | Promise<string | null>;
   headerName: string;
-  authScheme: string | ((request?: HttpRequest<any>) => string);
+  authScheme: string | ((request?: HttpRequest<unknown>) => string);
   allowedDomains: Array<string | RegExp>;
   disallowedRoutes: Array<string | RegExp>;
   throwNoTokenError: boolean;
   skipWhenExpired: boolean;
   standardPorts: string[] = ["80", "443"];
 
-  public jwtHelper = inject(JwtHelperService);
+  jwtHelper = inject(JwtHelperService);
+  config = inject(JWT_OPTIONS);
 
-  constructor(
-    @Inject(JWT_OPTIONS) config: any,
-    @Inject(DOCUMENT) private document: Document
-  ) {
-    this.tokenGetter = config.tokenGetter;
-    this.headerName = config.headerName || "Authorization";
-    this.authScheme = config.authScheme || config.authScheme === "" ? config.authScheme : "Bearer ";
-    this.allowedDomains = config.allowedDomains || [];
-    this.disallowedRoutes = config.disallowedRoutes || [];
-    this.throwNoTokenError = config.throwNoTokenError || false;
-    this.skipWhenExpired = config.skipWhenExpired;
+  private document = inject(DOCUMENT);
+
+  constructor() {
+    this.tokenGetter = this.config.tokenGetter;
+    this.headerName = this.config.headerName || "Authorization";
+    this.authScheme = this.config.authScheme || this.config.authScheme === "" ? this.config.authScheme : "Bearer ";
+    this.allowedDomains = this.config.allowedDomains || [];
+    this.disallowedRoutes = this.config.disallowedRoutes || [];
+    this.throwNoTokenError = this.config.throwNoTokenError || false;
+    this.skipWhenExpired = this.config.skipWhenExpired || false;
   }
 
-  public isAllowedDomain(request: HttpRequest<any>): boolean {
+  isAllowedDomain(request: HttpRequest<unknown>): boolean {
     const requestUrl: URL = new URL(request.url, this.document.location.origin);
 
     // If the host equals the current window origin,
@@ -60,7 +60,7 @@ export class JwtInterceptor implements HttpInterceptor {
     );
   }
 
-  public isDisallowedRoute(request: HttpRequest<any>): boolean {
+  isDisallowedRoute(request: HttpRequest<unknown>): boolean {
     const requestedUrl: URL = new URL(request.url, this.document.location.origin);
 
     return (
@@ -79,7 +79,7 @@ export class JwtInterceptor implements HttpInterceptor {
     );
   }
 
-  public handleInterception(token: string | null, request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  handleInterception(token: string | null, request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const authScheme = this.jwtHelper.getAuthScheme(this.authScheme, request);
 
     if (!token && this.throwNoTokenError) {
@@ -110,7 +110,7 @@ export class JwtInterceptor implements HttpInterceptor {
     return next.handle(request);
   }
 
-  public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     if (!this.isAllowedDomain(request) || this.isDisallowedRoute(request)) {
       return next.handle(request);
     }

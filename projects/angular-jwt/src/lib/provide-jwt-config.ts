@@ -4,8 +4,10 @@ import { JwtInterceptor } from "./jwt.interceptor";
 import { JwtHelperService } from "./jwthelper.service";
 import { JWT_OPTIONS } from "./jwtoptions.token";
 
+export type JwtTokenGetterType = (request?: HttpRequest<unknown>) => string | null | Promise<string | null>;
+
 export interface JwtConfig {
-  tokenGetter?: (request?: HttpRequest<unknown>) => string | null | Promise<string | null>;
+  tokenGetter: JwtTokenGetterType;
   headerName?: string;
   authScheme?: string | ((request?: HttpRequest<unknown>) => string);
   allowedDomains?: Array<string | RegExp>;
@@ -14,7 +16,7 @@ export interface JwtConfig {
   skipWhenExpired?: boolean;
 }
 
-export interface JwtModuleOptions {
+export interface JwtProviderOptions {
   jwtOptionsProvider?: Provider;
   config?: JwtConfig;
 }
@@ -27,9 +29,9 @@ export interface JwtModuleOptions {
  * });
  * ```
  */
-export const provideJwtConfig = (config: JwtConfig): EnvironmentProviders =>
+export const provideJwtConfig = (options: JwtProviderOptions): EnvironmentProviders =>
   makeEnvironmentProviders([
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    { provide: JWT_OPTIONS, useValue: config },
+    options.jwtOptionsProvider || { provide: JWT_OPTIONS, useValue: options.config },
     JwtHelperService,
   ]);

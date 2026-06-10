@@ -22,8 +22,10 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideHttpClient(withFetch(), withInterceptorsFromDi()),
     provideJwtConfig({
-      tokenGetter,
-      authScheme: getAuthScheme,
+      config: {
+        tokenGetter,
+        authScheme: getAuthScheme,
+      },
     }),
   ],
 };

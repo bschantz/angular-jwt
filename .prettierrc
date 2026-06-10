@@ -8,5 +8,5 @@
   "trailingComma": "es5",
   "bracketSameLine": true,
   "printWidth": 140,
-  "endOfLine": "crlf"
+  "endOfLine": "lf"
 }

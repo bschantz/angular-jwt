@@ -1,11 +1,16 @@
 {
   "name": "@jjmhalew/angular-jwt",
-  "version": "21.0.1",
+  "version": "21.0.2",
+  "module": "dist/fesm2022/jjmhalew-angular-jwt.mjs",
+  "types": "dist/types/jjmhalew-angular-jwt.d.ts",
+  "files": [
+    "dist/*"
+  ],
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build angular-jwt --configuration production",
-    "postbuild": "cp ./README.md ./CHANGELOG.md ./LICENSE ./dist/angular-jwt/",
+    "postbuild": "cp ./README.md ./CHANGELOG.md ./LICENSE ./dist/",
     "test": "ng test",
     "test:ci": "npm run test:angular-jwt && npm run test:angular-jwt-demo",
     "test:angular-jwt-demo": "ng test angular-jwt-demo --no-watch --no-progress --browsers=ChromeHeadlessCI --code-coverage",
@@ -26,9 +31,10 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@angular/build": "21.0.6",
+    "@angular/build": "^21.0.6",
     "@angular/cli": "^21.0.6",
     "@angular/compiler-cli": "^21.0.9",
+    "@vitest/browser-playwright": "^4.1.8",
     "angular-eslint": "21.1.0",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
@@ -42,7 +48,7 @@
     "vitest": "^4.0.17"
   },
   "np": {
-    "contents": "dist/angular-jwt"
+    "contents": "dist"
   },
   "publishConfig": {
     "access": "public"
